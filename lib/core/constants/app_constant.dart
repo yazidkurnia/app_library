@@ -6,26 +6,31 @@ import 'package:logger/logger.dart';
 class AppConstants {
   var logger = Logger();
   static const String baseUrl = 'http://192.168.56.1:3000';
+
+  //* endpoint auth
   static const String signInEndpoint = '$baseUrl/sign-in';
   static const String signUpEndpoint = '$baseUrl/Sign-up';
 
-  void printLog(String message, String type) {
+  //* endpoint book
+  static const String topFiveBookEndpoint = '$baseUrl/best_five_books';
+  static const String allBook = '$baseUrl/all-book';
+
+  void printLog(dynamic message, String type) {
+    if (message is Map) {
+      // Jika message adalah Map, konversi ke string
+      message = message.toString();
+    }
+
     if (type == 'error') {
-      return logger.e(message);
+      logger.e(message);
+    } else if (type == 'trace') {
+      logger.t(message);
+    } else if (type == 'warning') {
+      logger.w(message);
+    } else if (type == 'info') {
+      logger.i(message);
+    } else {
+      logger.d(message);
     }
-
-    if (type == 'trace') {
-      return logger.t(message);
-    }
-
-    if (type == 'warning') {
-      return logger.w(message);
-    }
-
-    if (type == 'info') {
-      return logger.i(message);
-    }
-
-    return logger.d(message);
   }
 }

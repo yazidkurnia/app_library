@@ -1,3 +1,5 @@
+import '../../../domain/entities/book_entity.dart';
+
 class BookModel {
   String? bookid;
   String? title;
@@ -16,13 +18,23 @@ class BookModel {
     imgUrl = json['img_url'];
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['bookid'] = this.bookid;
-    data['title'] = this.title;
-    data['deskripsi'] = this.deskripsi;
-    data['category_id'] = this.categoryId;
-    data['img_url'] = this.imgUrl;
-    return data;
+  // Map<String, dynamic> toJson() {
+  //   final Map<String, dynamic> data = new Map<String, dynamic>();
+  //   data['bookid'] = bookid;
+  //   data['title'] = title;
+  //   data['deskripsi'] = deskripsi;
+  //   data['category_id'] = categoryId;
+  //   data['img_url'] = imgUrl;
+  //   return data;
+  // }
+
+  BookEntity bookEntity() {
+    return BookEntity(
+      bookId: bookid,
+      title: title,
+      description: deskripsi,
+      categoryId: categoryId,
+      imageUrl: imgUrl,
+    );
   }
 }

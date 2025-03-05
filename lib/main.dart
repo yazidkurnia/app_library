@@ -1,7 +1,9 @@
 import 'package:app_library/data/data_sources/remote_data_source.dart';
 import 'package:app_library/domain/usecases/get_user_usecase.dart';
+import 'package:app_library/presentation/presenters/book_presenter.dart';
 import 'package:app_library/presentation/screens/auth/login_screen.dart';
 import 'package:app_library/presentation/screens/home/home_screen.dart';
+import 'package:app_library/presentation/states/books/topfivebook_state.dart';
 import 'package:app_library/presentation/states/user_state.dart';
 import 'package:app_library/providers/api_provider.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +15,7 @@ import 'core/routes/app_router.dart';
 import 'core/service_locator.dart';
 import 'data/data_sources/localstorage/shared_preferences_service.dart';
 import 'data/repositories/user_repository.dart';
+import 'domain/usecases/books/get_book_usecase.dart';
 
 void main() {
   setupLocator();
@@ -32,6 +35,12 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => UserState()),
+        Provider<BookPresenter>(
+          create: (context) => GetIt.I<BookPresenter>(),
+        ),
+        ChangeNotifierProvider<TopFiveBookState>(
+          create: (context) => TopFiveBookState(),
+        ),
         Provider(create: (context) => ApiClient()),
         Provider(
             create: (context) => SharedPreferencesService()), // Tambahkan ini
