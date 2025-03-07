@@ -1,6 +1,7 @@
 // lib/presentation/presenters/user_presenter.dart
 
 import '../../core/constants/app_constant.dart';
+import '../../core/constants/debug_log.dart';
 import '../../domain/usecases/get_user_usecase.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../core/errors/failure.dart';
@@ -15,7 +16,7 @@ class UserPresenter {
       return await getUserUseCase.call(email, password);
     } catch (e) {
       if (e is Failure) {
-        AppConstants().printLog('$e', 'error');
+        DebugLog().printLog('$e', 'error');
       }
       return null;
     }
@@ -25,7 +26,7 @@ class UserPresenter {
     try {
       return await getUserUseCase.signUp(email, password);
     } catch (e) {
-      AppConstants().printLog(e.toString(), 'error');
+      DebugLog().printLog(e.toString(), 'error');
       return false;
     }
   }

@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 
 import '../constants/app_constant.dart';
+import '../constants/debug_log.dart';
 
 class ApiClient {
   var logger = Logger();
@@ -23,18 +24,18 @@ class ApiClient {
       final response = await _client.get(url, queryParameters: queryParams);
       return response.data;
     } on DioException catch (e) {
-      AppConstants().printLog('Request get failed: ${e.message}', 'error');
+      DebugLog().printLog('Request get failed: ${e.message}', 'error');
       return null;
     }
   }
 
   Future<dynamic> post(String url, dynamic payload) async {
     final response = await _client.post(url, data: payload);
-    AppConstants().printLog('$response', 'info');
+    DebugLog().printLog('$response', 'info');
     try {
       return response.data;
     } on DioException catch (e) {
-      AppConstants().printLog('Request get failed: ${e.message}', 'error');
+      DebugLog().printLog('Request get failed: ${e.message}', 'error');
       return null;
     }
   }

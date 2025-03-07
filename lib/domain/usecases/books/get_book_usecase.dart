@@ -2,6 +2,7 @@ import 'package:app_library/core/errors/server_failure.dart';
 import 'package:dio/dio.dart';
 
 import '../../../core/constants/app_constant.dart';
+import '../../../core/constants/debug_log.dart';
 import '../../../core/errors/network_failure.dart';
 import '../../entities/book_entity.dart';
 import '../../repositories/book_repository_interface.dart';
@@ -15,7 +16,7 @@ class GetBookUseCase {
     try {
       return await repository.getTopFiveBook();
     } on DioException catch (e) {
-      AppConstants().printLog('$e', 'error');
+      DebugLog().printLog('$e', 'error');
       // Handle specific HTTP error codes
       if (e.response != null) {
         final statusCode = e.response!.statusCode;
@@ -41,16 +42,16 @@ class GetBookUseCase {
           }
         }
 
-        AppConstants().printLog('Error response: ${e.response!.data}', 'error');
+        DebugLog().printLog('Error response: ${e.response!.data}', 'error');
         throw ServerFailure(errorMessage);
       } else {
         // Network errors without response
-        AppConstants().printLog('Network error: ${e.message}', 'error');
+        DebugLog().printLog('Network error: ${e.message}', 'error');
         throw NetworkFailure(
             'Network error. Please check your internet connection.');
       }
     } catch (e) {
-      AppConstants().printLog('Error: $e', 'error');
+      DebugLog().printLog('Error: $e', 'error');
       throw ServerFailure('An unexpected error occurred');
     }
   }
@@ -59,7 +60,7 @@ class GetBookUseCase {
     try {
       return await repository.getAllBook();
     } on DioException catch (e) {
-      AppConstants().printLog('$e', 'error');
+      DebugLog().printLog('$e', 'error');
 
       if (e.response != null) {
         final statusCode = e.response!.statusCode;
@@ -83,10 +84,10 @@ class GetBookUseCase {
             errorMessage = 'Server error: ${e.response!.statusCode}';
           }
         }
-        AppConstants().printLog('Error response: ${e.response!.data}', 'error');
+        DebugLog().printLog('Error response: ${e.response!.data}', 'error');
         throw ServerFailure(errorMessage);
       } else {
-        AppConstants().printLog('Error response: ${e.response!.data}', 'error');
+        DebugLog().printLog('Error response: ${e.response!.data}', 'error');
         throw NetworkFailure('Terjadi kesalahan pada jaringan');
       }
     } catch (e) {

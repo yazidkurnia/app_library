@@ -14,23 +14,4 @@ class AppConstants {
   //* endpoint book
   static const String topFiveBookEndpoint = '$baseUrl/best_five_books';
   static const String allBook = '$baseUrl/all-book';
-
-  void printLog(dynamic message, String type) {
-    if (message is Map) {
-      // Jika message adalah Map, konversi ke string
-      message = message.toString();
-    }
-
-    if (type == 'error') {
-      logger.e(message);
-    } else if (type == 'trace') {
-      logger.t(message);
-    } else if (type == 'warning') {
-      logger.w(message);
-    } else if (type == 'info') {
-      logger.i(message);
-    } else {
-      logger.d(message);
-    }
-  }
 }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_constant.dart';
+import '../../../core/constants/debug_log.dart';
 import '../../../core/errors/network_failure.dart';
 import '../../../core/errors/server_failure.dart';
 import '../../../domain/usecases/get_user_usecase.dart';
@@ -49,8 +50,7 @@ class LoginScreen extends StatelessWidget {
                                 listen: false);
 
                             try {
-                              AppConstants()
-                                  .printLog('Trying to login...', 'info');
+                              DebugLog().printLog('Trying to login...', 'info');
                               final user = await getUserUseCase.call(
                                 emailController.text,
                                 passwordController.text,
@@ -58,7 +58,7 @@ class LoginScreen extends StatelessWidget {
 
                               if (user.email != '') {
                                 userState.setUser(user); // Set user state
-                                AppConstants().printLog(
+                                DebugLog().printLog(
                                     'Login successful: $user', 'info');
                                 // Navigate to home screen
                                 Navigator.pushNamed(context, '/home');
@@ -71,7 +71,7 @@ class LoginScreen extends StatelessWidget {
                               }
                             } catch (e) {
                               if (e is ServerFailure) {
-                                AppConstants().printLog(e.toString(), 'error');
+                                DebugLog().printLog(e.toString(), 'error');
                                 userState
                                     .setError(e.message); // Set error message
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -80,10 +80,10 @@ class LoginScreen extends StatelessWidget {
                                       content:
                                           Text('Login failed: ${e.message}')),
                                 );
-                                AppConstants()
+                                DebugLog()
                                     .printLog('Error: ${e.message}', 'error');
                               } else if (e is NetworkFailure) {
-                                AppConstants().printLog(e.toString(), 'error');
+                                DebugLog().printLog(e.toString(), 'error');
                                 // Tangani kesalahan jaringan
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
@@ -93,7 +93,7 @@ class LoginScreen extends StatelessWidget {
                                 );
                               } else {
                                 // Tangani kesalahan lain jika perlu
-                                // AppConstants().printLog(e.toString(), 'error');
+                                // DebugLog().printLog(e.toString(), 'error');
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                       backgroundColor: Colors.red,

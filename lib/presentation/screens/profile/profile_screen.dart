@@ -1,6 +1,6 @@
-import 'package:app_library/core/constants/app_constant.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/constants/debug_log.dart';
 import '../../../data/data_sources/localstorage/shared_preferences_service.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -13,8 +13,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> checkToken() async {
     String? token = await SharedPreferencesService().getToken();
-    AppConstants()
-        .printLog('Current token: ${token ?? "No token found"}', 'info');
+    DebugLog().printLog('Current token: ${token ?? "No token found"}', 'info');
   }
 
   @override

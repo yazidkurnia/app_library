@@ -2,6 +2,7 @@
 
 import 'package:app_library/core/constants/app_constant.dart';
 
+import '../../core/constants/debug_log.dart';
 import '../../core/errors/server_failure.dart';
 import '../../domain/repositories/user_repository_interface.dart';
 import '../data_sources/localstorage/shared_preferences_service.dart';
@@ -18,7 +19,7 @@ class UserRepository implements UserRepositoryInterface {
   @override
   Future<UserEntity> signIn(String email, String password) async {
     final response = await remoteDataSource.signIn(email, password);
-    AppConstants().printLog('response api client: $response', 'info');
+    DebugLog().printLog('response api client: $response', 'info');
     if (response['meta']['code'] == 200) {
       final userModel = UserModel.fromJson(response['data']);
       await sharedPreferencesService.saveToken(userModel.token);
@@ -45,14 +46,14 @@ class UserRepository implements UserRepositoryInterface {
   @override
   Future<bool> signUp(String email, String password) async {
     final response = await remoteDataSource.signUp(email, password);
-    AppConstants().printLog('repository response ${response['meta']}', 'info');
+    DebugLog().printLog('repository response ${response['meta']}', 'info');
     if (response['meta']['code'] == 200) {
-      // AppConstants().printLog(response, 'info');
-      AppConstants().printLog(response, 'info');
+      // DebugLog().printLog(response, 'info');
+      DebugLog().printLog(response, 'info');
       return true;
     } else {
       // print(response);
-      AppConstants().printLog(response, 'error');
+      DebugLog().printLog(response, 'error');
       return false;
     }
   }

@@ -4,6 +4,7 @@
 //* yang ada pada class repository interface
 
 import '../../core/constants/app_constant.dart';
+import '../../core/constants/debug_log.dart';
 import '../../core/errors/server_failure.dart';
 import '../../domain/entities/book_entity.dart';
 import '../../domain/repositories/book_repository_interface.dart';
@@ -19,7 +20,7 @@ class BookRepository implements BookRepositoryInterface {
   Future<List<BookEntity>> getTopFiveBook() async {
     try {
       final response = await remoteDataSource.getTopFiveBook();
-      AppConstants().printLog(
+      DebugLog().printLog(
           'Response from API: $response', 'info'); // Tambahkan log ini
 
       if (response['meta']['code'] == 200) {
@@ -42,7 +43,7 @@ class BookRepository implements BookRepositoryInterface {
         throw ServerFailure(errorMessage);
       }
     } catch (e) {
-      AppConstants().printLog('Error: $e', 'error'); // Tambahkan log di sini
+      DebugLog().printLog('Error: $e', 'error'); // Tambahkan log di sini
       throw Exception(e);
     }
   }
@@ -52,8 +53,7 @@ class BookRepository implements BookRepositoryInterface {
   Future<List<BookEntity>> getAllBook() async {
     try {
       final response = await remoteDataSource.getAllBooks();
-      AppConstants()
-          .printLog('Get ll book response callback: $response', 'info');
+      DebugLog().printLog('Get ll book response callback: $response', 'info');
       if (response['meta']['code'] == 200) {
         final List<dynamic> allbook = response['data'];
         return allbook.map((e) => BookModel.fromJson(e).bookEntity()).toList();
@@ -72,7 +72,7 @@ class BookRepository implements BookRepositoryInterface {
         throw ServerFailure(errorMessage);
       }
     } catch (e) {
-      AppConstants().printLog('Error: $e', 'error');
+      DebugLog().printLog('Error: $e', 'error');
       throw Exception(e);
     }
   }

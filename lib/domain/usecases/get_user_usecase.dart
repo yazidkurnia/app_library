@@ -2,6 +2,7 @@ import 'package:app_library/core/errors/network_failure.dart';
 import 'package:dio/dio.dart';
 
 import '../../core/constants/app_constant.dart';
+import '../../core/constants/debug_log.dart';
 import '../../core/errors/server_failure.dart';
 import '../repositories/user_repository_interface.dart';
 
@@ -40,17 +41,17 @@ class GetUserUseCase {
           }
         }
 
-        AppConstants().printLog('Error response: ${e.response!.data}', 'error');
+        DebugLog().printLog('Error response: ${e.response!.data}', 'error');
         throw ServerFailure(errorMessage);
       } else {
         // Network errors without response
-        AppConstants().printLog('Network error: ${e.message}', 'error');
+        DebugLog().printLog('Network error: ${e.message}', 'error');
         throw NetworkFailure(
             'Network error. Please check your internet connection.');
       }
     } catch (e) {
       // Handle any other exceptions
-      AppConstants().printLog('Unexpected error: $e', 'error');
+      DebugLog().printLog('Unexpected error: $e', 'error');
       throw ServerFailure(
           'An unexpected error occurred. Please try again later.');
     }
