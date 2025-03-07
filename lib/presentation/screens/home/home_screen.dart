@@ -39,13 +39,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Widget _buildSearchBookField() {
-      return Expanded(
-          child: TextField(
-        controller: _searchBookController,
-      ));
-    }
-
     Widget _buildBody() {
       // Return different content based on _currentIndex
       switch (_currentIndex) {

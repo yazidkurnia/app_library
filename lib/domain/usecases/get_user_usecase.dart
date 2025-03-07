@@ -1,12 +1,9 @@
-import 'dart:convert';
-
 import 'package:app_library/core/errors/network_failure.dart';
 import 'package:dio/dio.dart';
 
 import '../../core/constants/app_constant.dart';
 import '../../core/errors/server_failure.dart';
 import '../repositories/user_repository_interface.dart';
-import '../entities/user_entity.dart';
 
 class GetUserUseCase {
   final UserRepositoryInterface repository;

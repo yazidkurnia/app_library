@@ -48,6 +48,7 @@ class BookRepository implements BookRepositoryInterface {
   }
 
   // todo: get all book
+  @override
   Future<List<BookEntity>> getAllBook() async {
     try {
       final response = await remoteDataSource.getAllBooks();

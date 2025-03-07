@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../domain/entities/book_entity.dart';
 import '../../../presenters/book_presenter.dart';
+import '../../../states/books/all_book_state.dart';
 import '../../../states/books/topfivebook_state.dart';
 import '../../../widgets/custom_shimmer.dart';
 
@@ -30,6 +31,7 @@ class _ContentState extends State<Content> with SingleTickerProviderStateMixin {
     // Panggil API untuk mendapatkan data buku terbaik
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _fetchTopFiveBooks();
+      _fetchAllBooks();
     });
   }
 
@@ -54,6 +56,28 @@ class _ContentState extends State<Content> with SingleTickerProviderStateMixin {
       topFiveBookState.setError('Gagal memuat data: $e');
     } finally {
       topFiveBookState.setLoading(false);
+    }
+  }
+
+  void _fetchAllBooks() async {
+    final allBookState = Provider.of<AllBookState>(context, listen: false);
+    final bookPresenter = Provider.of<BookPresenter>(context, listen: false);
+
+    allBookState.setLoading(true);
+
+    try {
+      final books = await bookPresenter.getAllBook();
+
+      if (books.isNotEmpty) {
+        // Asumsikan bahwa kita telah mengubah allbooks menjadi list
+        allBookState.setAllBooks(books);
+      } else {
+        allBookState.setError('Maaf buku tidak ditemukan');
+      }
+    } catch (e) {
+      allBookState.setError('Gagal memuat data: $e');
+    } finally {
+      allBookState.setLoading(false);
     }
   }
 
@@ -296,7 +320,7 @@ class _ContentState extends State<Content> with SingleTickerProviderStateMixin {
   }
 
   Widget _buildAllBookWidget(String sectionTitle) {
-    return Consumer<TopFiveBookState>(
+    return Consumer<AllBookState>(
       builder: (context, state, child) {
         if (state.loading) {
           return Column(
@@ -352,7 +376,7 @@ class _ContentState extends State<Content> with SingleTickerProviderStateMixin {
         }
 
         // todo Jika tidak ada data, gunakan placeholder atau data statis
-        if (state.topFiveBooks == null || state.topFiveBooks!.isEmpty) {
+        if (state.allBooks == null || state.allBooks!.isEmpty) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -397,27 +421,36 @@ class _ContentState extends State<Content> with SingleTickerProviderStateMixin {
               shrinkWrap: true,
               physics:
                   const NeverScrollableScrollPhysics(), // Disable scrolling for this ListView
-              itemCount: state.topFiveBooks!.length,
+              itemCount: state.allBooks!.length,
               itemBuilder: (context, index) => Container(
                   margin: const EdgeInsets.only(bottom: 12),
-                  child: Row(children: [
-                    Image.network(
-                      width: 50,
-                      height: 50,
-                      state.topFiveBooks![index].imageUrl.toString(),
-                      fit: BoxFit.cover,
-                    ),
-                    const SizedBox(width: 16),
-                    Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(state.topFiveBooks![index].title.toString()),
-                          const SizedBox(height: 3),
-                          Text(state.topFiveBooks![index].description
-                              .toString()),
-                        ])
-                  ])),
+                  child: Expanded(
+                    child: Row(children: [
+                      Image.network(
+                        width: 50,
+                        height: 50,
+                        state.allBooks![index].imageUrl.toString(),
+                        fit: BoxFit.cover,
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                state.allBooks![index].title.toString(),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 3),
+                              Text(
+                                state.allBooks![index].description.toString(),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ]),
+                      )
+                    ]),
+                  )),
             ),
           ],
         );

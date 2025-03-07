@@ -42,6 +42,7 @@ class UserRepository implements UserRepositoryInterface {
     }
   }
 
+  @override
   Future<bool> signUp(String email, String password) async {
     final response = await remoteDataSource.signUp(email, password);
     AppConstants().printLog('repository response ${response['meta']}', 'info');

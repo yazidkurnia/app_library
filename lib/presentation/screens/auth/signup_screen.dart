@@ -1,9 +1,9 @@
 // lib/presentation/screens/home_screen.dart
 
+import 'package:app_library/core/constants/app_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import '../../../core/errors/failure.dart';
-import '../../../data/data_sources/localstorage/shared_preferences_service.dart';
 import '../../../domain/usecases/get_user_usecase.dart';
 
 class SignupScreen extends StatelessWidget {
@@ -42,11 +42,11 @@ class SignupScreen extends StatelessWidget {
                     emailController.text,
                     passwordController.text,
                   );
-                  print('User  signed up: $user');
+                  AppConstants().printLog('User  signed up: $user', 'info');
                 } catch (e) {
                   if (e is Failure) {
                     // Handle failure (e.g., show error message)
-                    print('Error: ${e.message}');
+                    AppConstants().printLog('Error: ${e.message}', 'error');
                   }
                 }
               },

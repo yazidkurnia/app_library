@@ -3,6 +3,7 @@ import 'package:app_library/domain/usecases/get_user_usecase.dart';
 import 'package:app_library/presentation/presenters/book_presenter.dart';
 import 'package:app_library/presentation/screens/auth/login_screen.dart';
 import 'package:app_library/presentation/screens/home/home_screen.dart';
+import 'package:app_library/presentation/states/books/all_book_state.dart';
 import 'package:app_library/presentation/states/books/topfivebook_state.dart';
 import 'package:app_library/presentation/states/user_state.dart';
 import 'package:app_library/providers/api_provider.dart';
@@ -11,23 +12,23 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import 'core/networks/api_client.dart';
-import 'core/routes/app_router.dart';
 import 'core/service_locator.dart';
 import 'data/data_sources/localstorage/shared_preferences_service.dart';
 import 'data/repositories/user_repository.dart';
-import 'domain/usecases/books/get_book_usecase.dart';
 
 void main() {
   setupLocator();
   runApp(
     ChangeNotifierProvider(
       create: (context) => ApiProvider(),
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     // final token =
@@ -40,6 +41,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<TopFiveBookState>(
           create: (context) => TopFiveBookState(),
+        ),
+        ChangeNotifierProvider<AllBookState>(
+          create: (context) => AllBookState(),
         ),
         Provider(create: (context) => ApiClient()),
         Provider(

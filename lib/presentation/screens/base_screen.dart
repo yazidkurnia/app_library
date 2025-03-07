@@ -24,17 +24,8 @@ class BasePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: _buildAppBar(),
       body: body,
       bottomNavigationBar: _buildBottomNav(),
-    );
-  }
-
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      title: Text(title),
-      automaticallyImplyLeading: showBackButton,
-      actions: actions,
     );
   }
 

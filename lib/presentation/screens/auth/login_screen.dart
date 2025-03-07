@@ -1,9 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:app_library/presentation/screens/auth/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_constant.dart';
-import '../../../core/errors/failure.dart';
 import '../../../core/errors/network_failure.dart';
 import '../../../core/errors/server_failure.dart';
 import '../../../domain/usecases/get_user_usecase.dart';
@@ -26,7 +27,7 @@ class LoginScreen extends StatelessWidget {
           child: Consumer<UserState>(
             builder: (context, userState, child) {
               return userState.loading == true
-                  ? Center(child: CircularProgressIndicator())
+                  ? const Center(child: CircularProgressIndicator())
                   : Column(
                       children: [
                         TextField(
