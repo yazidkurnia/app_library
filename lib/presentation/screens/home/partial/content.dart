@@ -5,6 +5,7 @@ import '../../../presenters/book_presenter.dart';
 import '../../../states/books/all_book_state.dart';
 import '../../../states/books/topfivebook_state.dart';
 import '../../../widgets/custom_shimmer.dart';
+import '../../book/detail_book_screen.dart';
 
 class Content extends StatefulWidget {
   const Content({super.key});
@@ -115,56 +116,68 @@ class _ContentState extends State<Content> with SingleTickerProviderStateMixin {
   }
 
   Widget _buildBookCard(BookEntity book) {
-    return Container(
-      width: MediaQuery.of(context).size.width - 100,
-      margin: const EdgeInsets.only(right: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            height: 130,
-            decoration: BoxDecoration(
-              color: Colors.amber,
-              borderRadius: BorderRadius.circular(8),
-              // Jika book memiliki coverUrl, gunakan NetworkImage
-              image: book.imageUrl != null && book.imageUrl!.isNotEmpty
-                  ? DecorationImage(
-                      image: NetworkImage(book.imageUrl!),
-                      fit: BoxFit.cover,
-                    )
-                  : null,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  spreadRadius: 1,
-                  blurRadius: 3,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            book.title ?? 'Judul Tidak Tersedia',
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-            ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-          if (book.bookId != null && book.bookId!.isNotEmpty)
-            Text(
-              book.bookId!,
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey[600],
+    return GestureDetector(
+      onTap: () {
+        // Navigator.pushNamed(context, '/detail-book',
+        //     arguments: {'bookId': book.bookId});
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DetailBookScreen(
+                      bookId: book.bookId!,
+                    )));
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width - 100,
+        margin: const EdgeInsets.only(right: 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              height: 130,
+              decoration: BoxDecoration(
+                color: Colors.amber,
+                borderRadius: BorderRadius.circular(8),
+                // Jika book memiliki coverUrl, gunakan NetworkImage
+                image: book.imageUrl != null && book.imageUrl!.isNotEmpty
+                    ? DecorationImage(
+                        image: NetworkImage(book.imageUrl!),
+                        fit: BoxFit.cover,
+                      )
+                    : null,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 3,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
-              maxLines: 1,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              book.title ?? 'Judul Tidak Tersedia',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+              maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-        ],
+            if (book.bookId != null && book.bookId!.isNotEmpty)
+              Text(
+                book.bookId!,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[600],
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+          ],
+        ),
       ),
     );
   }

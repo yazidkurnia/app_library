@@ -4,6 +4,7 @@ import 'package:app_library/presentation/presenters/book_presenter.dart';
 import 'package:app_library/presentation/screens/auth/login_screen.dart';
 import 'package:app_library/presentation/screens/home/home_screen.dart';
 import 'package:app_library/presentation/states/books/all_book_state.dart';
+import 'package:app_library/presentation/states/books/detail_book_state.dart';
 import 'package:app_library/presentation/states/books/topfivebook_state.dart';
 import 'package:app_library/presentation/states/user_state.dart';
 import 'package:app_library/providers/api_provider.dart';
@@ -44,6 +45,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<AllBookState>(
           create: (context) => AllBookState(),
+        ),
+        ChangeNotifierProvider<DetailBookState>(
+          create: (context) => DetailBookState(),
         ),
         Provider(create: (context) => ApiClient()),
         Provider(

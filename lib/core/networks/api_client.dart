@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 
-import '../constants/app_constant.dart';
 import '../constants/debug_log.dart';
 
 class ApiClient {
@@ -24,7 +23,7 @@ class ApiClient {
       final response = await _client.get(url, queryParameters: queryParams);
       return response.data;
     } on DioException catch (e) {
-      DebugLog().printLog('Request get failed: ${e.message}', 'error');
+      DebugLog().printLog('Request get failed: $e', 'error');
       return null;
     }
   }

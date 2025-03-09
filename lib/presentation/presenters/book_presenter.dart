@@ -1,5 +1,5 @@
-import 'package:app_library/core/constants/app_constant.dart';
 import 'package:app_library/domain/usecases/books/get_book_usecase.dart';
+import 'package:app_library/presentation/states/books/detail_book_state.dart';
 
 import '../../core/constants/debug_log.dart';
 import '../../core/errors/failure.dart';
@@ -35,6 +35,27 @@ class BookPresenter {
       DebugLog()
           .printLog('Error occurred: $e', 'error'); // Tambahkan log di sini
       return [];
+    }
+  }
+
+  Future<BookEntity?> getDetailBook(bookId) async {
+    final DetailBookState _state = DetailBookState();
+    try {
+      _state.setLoading(true);
+      DebugLog().printLog('proses fetch data', 'info');
+      final book = await getBookUseCase.getDetailBook(bookId);
+      if (book == null) {
+        DebugLog().printLog('Book not found', 'warning');
+      }
+      _state.setLoading(false);
+      return book;
+    } catch (e) {
+      _state.setLoading(false);
+      if (e is Failure) {
+        DebugLog().printLog(e.message, 'error');
+      }
+      DebugLog().printLog('Error occurred: $e', 'error');
+      return null;
     }
   }
 }

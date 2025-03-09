@@ -3,7 +3,6 @@
 //* yang artinya penamaan fungsi pada class repository harus sama dengan
 //* yang ada pada class repository interface
 
-import '../../core/constants/app_constant.dart';
 import '../../core/constants/debug_log.dart';
 import '../../core/errors/server_failure.dart';
 import '../../domain/entities/book_entity.dart';
@@ -57,6 +56,37 @@ class BookRepository implements BookRepositoryInterface {
       if (response['meta']['code'] == 200) {
         final List<dynamic> allbook = response['data'];
         return allbook.map((e) => BookModel.fromJson(e).bookEntity()).toList();
+      } else {
+        var message = response['meta']['message'];
+        String errorMessage;
+
+        if (message is String) {
+          errorMessage = message;
+        } else if (message is Map) {
+          errorMessage = message.toString();
+        } else {
+          errorMessage = 'Something wrong can not fetch data';
+        }
+
+        throw ServerFailure(errorMessage);
+      }
+    } catch (e) {
+      DebugLog().printLog('Error: $e', 'error');
+      throw Exception(e);
+    }
+  }
+
+  @override
+  Future<BookEntity?> getBookById(String bookId) async {
+    try {
+      final response = await remoteDataSource.getBookDetail(bookId);
+      DebugLog().printLog('$response', 'warning');
+
+      // Pastikan response tidak null dan memiliki struktur yang benar
+      if (response != null && response['meta']['code'] == 200) {
+        final dynamic detailBook = response['data'];
+        return BookModel.fromJson(detailBook)
+            .bookEntity(); // Konversi ke BookEntity
       } else {
         var message = response['meta']['message'];
         String errorMessage;

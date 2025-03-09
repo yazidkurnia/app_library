@@ -7,6 +7,9 @@ class AppConstants {
   var logger = Logger();
   static const String baseUrl = 'http://192.168.56.1:3000';
 
+  //--------------------------------------------------------------------------------------------|
+  //                                        ENDPOINT                                            |
+  //--------------------------------------------------------------------------------------------|
   //* endpoint auth
   static const String signInEndpoint = '$baseUrl/sign-in';
   static const String signUpEndpoint = '$baseUrl/Sign-up';
@@ -14,4 +17,6 @@ class AppConstants {
   //* endpoint book
   static const String topFiveBookEndpoint = '$baseUrl/best_five_books';
   static const String allBook = '$baseUrl/all-book';
+  static const String detailBook =
+      '$baseUrl/book/detail/'; //* membutuhkan parameter id
 }

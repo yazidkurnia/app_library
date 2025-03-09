@@ -1,4 +1,5 @@
 import '../../core/constants/app_constant.dart';
+import '../../core/constants/debug_log.dart';
 import '../../core/networks/api_client.dart';
 
 class RemoteDataSource {
@@ -29,23 +30,10 @@ class RemoteDataSource {
     return await apiClient.get(AppConstants.topFiveBookEndpoint);
   }
 
-  // Future<dynamic> getBookById(String bookId) async {
-  //   return await apiClient.get('${AppConstants.getBookEndpoint}/$bookId');
-  // }
-
-  // Future<dynamic> getBooksByCategory(String categoryId) async {
-  //   return await apiClient.get('${AppConstants.getBooksByCategoryEndpoint}/$categoryId');
-  // }
-
-  // Future<dynamic> addBook(Map<String, dynamic> bookData) async {
-  //   return await apiClient.post(AppConstants.addBookEndpoint, bookData);
-  // }
-
-  // Future<dynamic> updateBook(Map<String, dynamic> bookData) async {
-  //   return await apiClient.put(AppConstants.updateBookEndpoint, bookData);
-  // }
-
-  // Future<dynamic> deleteBook(String bookId) async {
-  //   return await apiClient.delete('${AppConstants.deleteBookEndpoint}/$bookId');
-  // }
+  Future<dynamic> getBookDetail(String bookId) async {
+    DebugLog().printLog('endpoint: ${AppConstants.detailBook}$bookId', 'info');
+    final response = await apiClient.get('${AppConstants.detailBook}$bookId');
+    DebugLog().printLog('response: $response', 'info');
+    return await apiClient.get('${AppConstants.detailBook}$bookId');
+  }
 }

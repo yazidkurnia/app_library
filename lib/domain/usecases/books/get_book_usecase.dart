@@ -1,7 +1,6 @@
 import 'package:app_library/core/errors/server_failure.dart';
 import 'package:dio/dio.dart';
 
-import '../../../core/constants/app_constant.dart';
 import '../../../core/constants/debug_log.dart';
 import '../../../core/errors/network_failure.dart';
 import '../../entities/book_entity.dart';
@@ -59,6 +58,46 @@ class GetBookUseCase {
   Future<List<BookEntity>> getAllBook() async {
     try {
       return await repository.getAllBook();
+    } on DioException catch (e) {
+      DebugLog().printLog('use case: $e', 'error');
+
+      if (e.response != null) {
+        final statusCode = e.response!.statusCode;
+
+        // get error message from response if available
+        String errorMessage;
+        if (e.response!.data != null &&
+            e.response!.data['meta'] != null &&
+            e.response!.data['meta']['message'] != null) {
+          var message = e.response!.data['meta']['message'];
+          errorMessage = message is String ? message : message.toString();
+        } else {
+          // Default error messages based on status code
+          if (statusCode == 400) {
+            errorMessage = 'Terjadi kesalahan pada request client';
+          } else if (statusCode == 401) {
+            errorMessage = 'Unauthorized access. please relogin';
+          } else if (statusCode == 404) {
+            errorMessage = 'Akun pengguna tidak ditemukan';
+          } else {
+            errorMessage = 'Server error: ${e.response!.statusCode}';
+          }
+        }
+        DebugLog().printLog('Error response: ${e.response!.data}', 'error');
+        throw ServerFailure(errorMessage);
+      } else {
+        DebugLog().printLog('Error response: ${e.response!.data}', 'error');
+        throw NetworkFailure('Terjadi kesalahan pada jaringan');
+      }
+    } catch (e) {
+      throw ServerFailure('An expected error occured');
+    }
+  }
+
+  // todo : get book detail
+  Future<BookEntity?> getDetailBook(bookId) async {
+    try {
+      return await repository.getBookById(bookId);
     } on DioException catch (e) {
       DebugLog().printLog('$e', 'error');
 

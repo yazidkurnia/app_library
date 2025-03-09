@@ -1,3 +1,4 @@
+// lib/data/models/book/book_model.dart
 import '../../../domain/entities/book_entity.dart';
 
 class BookModel {
