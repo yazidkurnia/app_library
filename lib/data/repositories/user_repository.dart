@@ -1,7 +1,5 @@
 // lib/data/repositories/user_repository.dart
 
-import 'package:app_library/core/constants/app_constant.dart';
-
 import '../../core/constants/debug_log.dart';
 import '../../core/errors/server_failure.dart';
 import '../../domain/repositories/user_repository_interface.dart';

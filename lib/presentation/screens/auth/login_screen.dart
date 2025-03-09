@@ -4,7 +4,6 @@ import 'package:app_library/presentation/screens/auth/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../core/constants/app_constant.dart';
 import '../../../core/constants/debug_log.dart';
 import '../../../core/errors/network_failure.dart';
 import '../../../core/errors/server_failure.dart';

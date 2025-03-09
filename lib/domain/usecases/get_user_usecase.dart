@@ -1,7 +1,6 @@
 import 'package:app_library/core/errors/network_failure.dart';
 import 'package:dio/dio.dart';
 
-import '../../core/constants/app_constant.dart';
 import '../../core/constants/debug_log.dart';
 import '../../core/errors/server_failure.dart';
 import '../repositories/user_repository_interface.dart';

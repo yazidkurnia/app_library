@@ -1,6 +1,5 @@
 // lib/presentation/presenters/user_presenter.dart
 
-import '../../core/constants/app_constant.dart';
 import '../../core/constants/debug_log.dart';
 import '../../domain/usecases/get_user_usecase.dart';
 import '../../domain/entities/user_entity.dart';
