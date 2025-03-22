@@ -1,8 +1,11 @@
 import 'package:app_library/presentation/presenters/book_presenter.dart';
+import 'package:app_library/presentation/screens/book/additional_book_screen.dart';
+import 'package:app_library/presentation/screens/book/partial/content_detail_book.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/debug_log.dart';
+import '../../../data/data_sources/localstorage/shared_preferences_service.dart';
 import '../../states/books/detail_book_state.dart';
 
 class DetailBookScreen extends StatefulWidget {
@@ -14,6 +17,7 @@ class DetailBookScreen extends StatefulWidget {
 }
 
 class _DetailBookScreenState extends State<DetailBookScreen> {
+  SharedPreferencesService additionalBookId = SharedPreferencesService();
   late String bookId; // Variabel untuk menyimpan bookId
 
   @override
@@ -26,13 +30,10 @@ class _DetailBookScreenState extends State<DetailBookScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Mengambil argumen di sini
-    // final Map<String, dynamic> args =
-    //     ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
-    // bookId = args['bookId']; // Menyimpan nilai bookId ke dalam variabel kelas
+  }
 
-    // Sekarang Anda bisa memanggil fungsi lain di sini jika perlu
-    // _testAksesBookId(bookId);
+  _saveTransaction() async {
+    DebugLog().printLog(await additionalBookId.getAdditionalBookId(), 'info');
   }
 
   @override
@@ -45,6 +46,66 @@ class _DetailBookScreenState extends State<DetailBookScreen> {
             child: Image.network(
                 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZ4ZFd7IOTkrogQQ7VWVVDQTgb_rdnEGPwU9IbhUJOHtIcI1flMycQD5QWso4UdhgV_Ao&usqp=CAU',
                 fit: BoxFit.cover)),
+      );
+    }
+
+    Widget additionalBook() {
+      return Container(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                OutlinedButton.icon(
+                  onPressed: () {
+                    additionalBookId.saveAdditionalBook(['${widget.bookId}']);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const AdditionalBookScreen()));
+                  },
+                  icon: const Icon(Icons.add),
+                  label: const Text('Add more book'),
+                )
+              ],
+            ),
+            const SizedBox(height: 14),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(' judul buku tambahan'),
+                Text(' 1x'),
+              ],
+            )
+          ],
+        ),
+      );
+    }
+
+    Widget footer() {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SizedBox(
+            width: MediaQuery.of(context).size.width / 2 - 24,
+            child: ElevatedButton(
+                style:
+                    ElevatedButton.styleFrom(backgroundColor: Colors.blue[50]),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child:
+                    Text('Cancel', style: TextStyle(color: Colors.blue[200]))),
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width / 2 - 24,
+            child: ElevatedButton(
+                onPressed: () {
+                  _saveTransaction();
+                },
+                child: const Text('Get it now')),
+          )
+        ],
       );
     }
 
@@ -70,58 +131,17 @@ class _DetailBookScreenState extends State<DetailBookScreen> {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      state.detailBook!.title.toString(),
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                    const Expanded(
+                      child: ContentDetailBook(
+                        bookTitle: 'Judul',
+                        descBook: 'lorem...',
                       ),
                     ),
+                    additionalBook(),
                     const SizedBox(
                       height: 16,
                     ),
-                    Text(
-                      state.detailBook!.description.toString(),
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ),
-                    const Spacer(),
-                    const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [Text('Tahun terbit'), Text('2023')]),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [Text('Penulis'), Text('Rio Ferdinan')]),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width / 2 - 24,
-                          child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.blue[50]),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text('Cancel',
-                                  style: TextStyle(color: Colors.blue[200]))),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width / 2 - 24,
-                          child: ElevatedButton(
-                              onPressed: () {},
-                              child: const Text('Get it now')),
-                        )
-                      ],
-                    )
+                    footer()
                   ],
                 );
               },

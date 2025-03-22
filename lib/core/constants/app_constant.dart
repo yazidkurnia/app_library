@@ -15,8 +15,9 @@ class AppConstants {
   static const String signUpEndpoint = '$baseUrl/Sign-up';
 
   //* endpoint book
-  static const String topFiveBookEndpoint = '$baseUrl/best_five_books';
-  static const String allBook = '$baseUrl/all-book';
+  static const String topFiveBookEndpointFromCategory =
+      '$baseUrl/best_five_books';
+  static const String allBookFromCategory = '$baseUrl/all-book';
   static const String detailBook =
       '$baseUrl/book/detail/'; //* membutuhkan parameter id
 }

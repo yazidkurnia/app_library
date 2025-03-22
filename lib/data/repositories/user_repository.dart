@@ -21,6 +21,7 @@ class UserRepository implements UserRepositoryInterface {
     if (response['meta']['code'] == 200) {
       final userModel = UserModel.fromJson(response['data']);
       await sharedPreferencesService.saveToken(userModel.token);
+      await sharedPreferencesService.saveUserRole(userModel.role);
       return userModel.toEntity(); // Mengonversi UserModel ke UserEntity
     } else {
       // Handle the case where message might be a Map instead of a String

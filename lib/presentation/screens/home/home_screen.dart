@@ -3,6 +3,7 @@ import 'package:app_library/presentation/screens/home/partial/content.dart';
 import 'package:flutter/material.dart';
 
 import '../profile/profile_screen.dart';
+import '../transaction/transaction_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -45,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
         case 0:
           return const Center(child: Content());
         case 1:
-          return const Center(child: Text('Business Content'));
+          return const Center(child: TransactionScreen());
         case 2:
           return const Center(child: ProfileScreen());
         default:

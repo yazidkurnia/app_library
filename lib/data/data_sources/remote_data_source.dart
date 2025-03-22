@@ -23,11 +23,11 @@ class RemoteDataSource {
 
   //* remote data book source
   Future<dynamic> getAllBooks() async {
-    return await apiClient.get(AppConstants.allBook);
+    return await apiClient.get(AppConstants.allBookFromCategory);
   }
 
   Future<dynamic> getTopFiveBook() async {
-    return await apiClient.get(AppConstants.topFiveBookEndpoint);
+    return await apiClient.get(AppConstants.topFiveBookEndpointFromCategory);
   }
 
   Future<dynamic> getBookDetail(String bookId) async {

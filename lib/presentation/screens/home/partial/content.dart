@@ -389,7 +389,8 @@ class _ContentState extends State<Content> with SingleTickerProviderStateMixin {
         }
 
         // todo Jika tidak ada data, gunakan placeholder atau data statis
-        if (state.allBooks == null || state.allBooks!.isEmpty) {
+        if (state.allBooksFromCategory == null ||
+            state.allBooksFromCategory!.isEmpty) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -434,7 +435,7 @@ class _ContentState extends State<Content> with SingleTickerProviderStateMixin {
               shrinkWrap: true,
               physics:
                   const NeverScrollableScrollPhysics(), // Disable scrolling for this ListView
-              itemCount: state.allBooks!.length,
+              itemCount: state.allBooksFromCategory!.length,
               itemBuilder: (context, index) => Container(
                   margin: const EdgeInsets.only(bottom: 12),
                   child: Expanded(
@@ -442,7 +443,7 @@ class _ContentState extends State<Content> with SingleTickerProviderStateMixin {
                       Image.network(
                         width: 50,
                         height: 50,
-                        state.allBooks![index].imageUrl.toString(),
+                        state.allBooksFromCategory![index].imageUrl.toString(),
                         fit: BoxFit.cover,
                       ),
                       const SizedBox(width: 16),
@@ -452,12 +453,14 @@ class _ContentState extends State<Content> with SingleTickerProviderStateMixin {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
-                                state.allBooks![index].title.toString(),
+                                state.allBooksFromCategory![index].title
+                                    .toString(),
                                 overflow: TextOverflow.ellipsis,
                               ),
                               const SizedBox(height: 3),
                               Text(
-                                state.allBooks![index].description.toString(),
+                                state.allBooksFromCategory![index].description
+                                    .toString(),
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ]),

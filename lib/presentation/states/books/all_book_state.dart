@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import '../../../domain/entities/book_entity.dart';
 
 class AllBookState with ChangeNotifier {
-  List<BookEntity>? _allBooks;
+  List<BookEntity>? _allBooksFromCategory;
   bool _loading = false;
   String? _errorMessage;
 
-  List<BookEntity>? get allBooks => _allBooks;
+  List<BookEntity>? get allBooksFromCategory => _allBooksFromCategory;
   bool get loading => _loading;
   String? get errorMessage => _errorMessage;
 
   void setAllBooks(List<BookEntity> books) {
-    _allBooks = books;
+    _allBooksFromCategory = books;
     _errorMessage = null;
     notifyListeners();
   }
