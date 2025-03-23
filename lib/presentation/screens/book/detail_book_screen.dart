@@ -6,7 +6,9 @@ import 'package:provider/provider.dart';
 
 import '../../../core/constants/debug_log.dart';
 import '../../../data/data_sources/localstorage/shared_preferences_service.dart';
+import '../../presenters/transaction_presenter.dart';
 import '../../states/books/detail_book_state.dart';
+import '../../states/transactions/transaction_state.dart';
 
 class DetailBookScreen extends StatefulWidget {
   final String bookId;
@@ -19,6 +21,7 @@ class DetailBookScreen extends StatefulWidget {
 class _DetailBookScreenState extends State<DetailBookScreen> {
   SharedPreferencesService additionalBookId = SharedPreferencesService();
   late String bookId; // Variabel untuk menyimpan bookId
+  TransactionState transactionState = TransactionState();
 
   @override
   void initState() {
@@ -33,7 +36,23 @@ class _DetailBookScreenState extends State<DetailBookScreen> {
   }
 
   _saveTransaction() async {
-    DebugLog().printLog(await additionalBookId.getAdditionalBookId(), 'info');
+    List<String>? data = await additionalBookId.getAdditionalBookId();
+    DebugLog().printLog(data, 'info');
+    final transactionPresenter =
+        await Provider.of<TransactionPresenter>(context, listen: false);
+
+    setState(() {
+      transactionState.setLoading(true);
+    });
+    DebugLog().printLog('loading: ${transactionState.isLoading}', 'info');
+    bool isSuccess = await transactionPresenter.storeTransaction(data!);
+    setState(() {
+      transactionState.setLoading(false);
+    });
+
+    DebugLog().printLog('loading: ${transactionState.isLoading}', 'info');
+
+    DebugLog().printLog(isSuccess, 'info');
   }
 
   @override
@@ -153,8 +172,20 @@ class _DetailBookScreenState extends State<DetailBookScreen> {
 
     return SafeArea(
       child: Scaffold(
-        body: ListView(
-          children: [bookImage(), bookDetail()],
+        body: Stack(
+          children: [
+            ListView(
+              children: [bookImage(), bookDetail()],
+            ),
+            if (transactionState.isLoading == true) ...[
+              Container(
+                width: double.infinity,
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              )
+            ],
+          ],
         ),
       ),
     );

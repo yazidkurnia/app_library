@@ -20,4 +20,7 @@ class AppConstants {
   static const String allBookFromCategory = '$baseUrl/all-book';
   static const String detailBook =
       '$baseUrl/book/detail/'; //* membutuhkan parameter id
+
+  //* endpoint transaction
+  static const String storeTransactionEndpoint = '$baseUrl/api/send-data';
 }

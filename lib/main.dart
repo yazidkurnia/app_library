@@ -1,11 +1,13 @@
 import 'package:app_library/data/data_sources/remote_data_source.dart';
 import 'package:app_library/domain/usecases/get_user_usecase.dart';
 import 'package:app_library/presentation/presenters/book_presenter.dart';
+import 'package:app_library/presentation/presenters/transaction_presenter.dart';
 import 'package:app_library/presentation/screens/auth/login_screen.dart';
 import 'package:app_library/presentation/screens/home/home_screen.dart';
 import 'package:app_library/presentation/states/books/all_book_state.dart';
 import 'package:app_library/presentation/states/books/detail_book_state.dart';
 import 'package:app_library/presentation/states/books/topfivebook_state.dart';
+import 'package:app_library/presentation/states/transactions/transaction_state.dart';
 import 'package:app_library/presentation/states/user_state.dart';
 import 'package:app_library/providers/api_provider.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +42,9 @@ class MyApp extends StatelessWidget {
         Provider<BookPresenter>(
           create: (context) => GetIt.I<BookPresenter>(),
         ),
+
+        Provider<TransactionPresenter>(
+            create: (context) => GetIt.I<TransactionPresenter>()),
         ChangeNotifierProvider<TopFiveBookState>(
           create: (context) => TopFiveBookState(),
         ),
@@ -48,6 +53,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<DetailBookState>(
           create: (context) => DetailBookState(),
+        ),
+        ChangeNotifierProvider<TransactionState>(
+          create: (context) => TransactionState(),
         ),
         Provider(create: (context) => ApiClient()),
         Provider(
