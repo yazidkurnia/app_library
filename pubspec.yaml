@@ -42,6 +42,7 @@ dependencies:
   go_router: ^13.1.0
   shimmer: ^3.0.0
   multiple_search_selection: ^2.7.1
+  fluttertoast: ^8.2.5
 
 dev_dependencies:
   flutter_test:
