@@ -475,14 +475,20 @@ class _ContentState extends State<Content> with SingleTickerProviderStateMixin {
   }
 
   Widget _buildTabContent(String title) {
-    return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      children: [
-        _buildBestBooksSection('5 Buku $title Terbaik'),
-        const SizedBox(height: 16),
-        _buildAllBookWidget('All book')
-      ],
-    );
+    if (title == 'Mobile') {
+      return ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        children: [
+          _buildBestBooksSection('5 Buku $title Terbaik'),
+          const SizedBox(height: 16),
+          _buildAllBookWidget('All book')
+        ],
+      );
+    } else {
+      return Center(
+        child: Text(title),
+      );
+    }
   }
 
   @override
