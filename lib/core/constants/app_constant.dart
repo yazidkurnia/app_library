@@ -1,11 +1,8 @@
 // digunakan untuk menyimpan setiap constanta atau variable yang dapat diakses di semua halaman
 // lib/core/constants/app_constants.dart
 
-import 'package:logger/logger.dart';
-
 class AppConstants {
-  var logger = Logger();
-  static const String baseUrl = 'http://192.168.56.1:3000';
+  static const String baseUrl = 'http://192.168.91.109:3000';
 
   //--------------------------------------------------------------------------------------------|
   //                                        ENDPOINT                                            |
@@ -23,4 +20,6 @@ class AppConstants {
 
   //* endpoint transaction
   static const String storeTransactionEndpoint = '$baseUrl/api/send-data';
+  static const String getStatusTransactionEndpoint =
+      '$baseUrl/get/status-transaksi/';
 }
