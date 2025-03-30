@@ -2,6 +2,7 @@ import 'package:app_library/presentation/presenters/book_presenter.dart';
 import 'package:app_library/presentation/screens/book/additional_book_screen.dart';
 import 'package:app_library/presentation/screens/book/partial/content_detail_book.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/debug_log.dart';
@@ -9,6 +10,7 @@ import '../../../data/data_sources/localstorage/shared_preferences_service.dart'
 import '../../presenters/transaction_presenter.dart';
 import '../../states/books/detail_book_state.dart';
 import '../../states/transactions/transaction_state.dart';
+import '../../widgets/custom_toast.dart';
 
 class DetailBookScreen extends StatefulWidget {
   final String bookId;
@@ -35,24 +37,43 @@ class _DetailBookScreenState extends State<DetailBookScreen> {
     super.didChangeDependencies();
   }
 
-  _saveTransaction() async {
+  _saveTransaction(context) async {
     List<String>? data = await additionalBookId.getAdditionalBookId();
+    bool isSuccess = false;
+
+    data ??= [widget.bookId];
+
     DebugLog().printLog(data, 'info');
     final transactionPresenter =
+        // ignore: await_only_futures
         await Provider.of<TransactionPresenter>(context, listen: false);
 
     setState(() {
       transactionState.setLoading(true);
     });
-    DebugLog().printLog('loading: ${transactionState.isLoading}', 'info');
-    bool isSuccess = await transactionPresenter.storeTransaction(data!);
+
+    isSuccess = await transactionPresenter.storeTransaction(data);
     setState(() {
       transactionState.setLoading(false);
     });
 
-    DebugLog().printLog('loading: ${transactionState.isLoading}', 'info');
-
-    DebugLog().printLog(isSuccess, 'info');
+    if (transactionState.isLoading == false && isSuccess == true) {
+      // additionalBookId.removeBookId();
+      // Fluttertoast.showToast(
+      //     msg: 'Berhasil melakukan peminjaman buku',
+      //     backgroundColor: Colors.green,
+      //     textColor: Colors.black);
+      CustomToast.showToast(
+          context, 'Berhasil melakukan peminjaman buku', 'success');
+    } else {
+      setState(() {
+        transactionState.setLoading(false);
+      });
+      if (transactionState.isLoading == false && isSuccess == false) {
+        CustomToast.showToast(
+            context, 'Gagal melakukan peminjaman buku', 'failed');
+      }
+    }
   }
 
   @override
@@ -120,7 +141,7 @@ class _DetailBookScreenState extends State<DetailBookScreen> {
             width: MediaQuery.of(context).size.width / 2 - 24,
             child: ElevatedButton(
                 onPressed: () {
-                  _saveTransaction();
+                  _saveTransaction(context);
                 },
                 child: const Text('Get it now')),
           )
@@ -179,8 +200,9 @@ class _DetailBookScreenState extends State<DetailBookScreen> {
             ),
             if (transactionState.isLoading == true) ...[
               Container(
+                color: const Color.fromARGB(80, 255, 255, 255),
                 width: double.infinity,
-                child: Center(
+                child: const Center(
                   child: CircularProgressIndicator(),
                 ),
               )
@@ -189,11 +211,6 @@ class _DetailBookScreenState extends State<DetailBookScreen> {
         ),
       ),
     );
-  }
-
-  String _testAksesBookId(String? bookId) {
-    DebugLog().printLog(bookId, 'info');
-    return bookId!;
   }
 
   void _fetchDetailBook(String book_id) async {
