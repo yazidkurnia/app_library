@@ -1,3 +1,4 @@
+import 'package:app_library/presentation/screens/transaction/partial/transaction_content.dart';
 import 'package:flutter/material.dart';
 
 class TransactionScreen extends StatefulWidget {
@@ -25,50 +26,6 @@ class _TransactionScreenState extends State<TransactionScreen>
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Transactions'),
-          bottom: TabBar(
-            controller: _tabController,
-            tabs: const [
-              Tab(text: 'Waiting'),
-              Tab(text: 'Completed'),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          controller: _tabController,
-          children: [
-            // Konten untuk tab "Waiting"
-            ListView(
-              children: const [
-                ListTile(
-                  title: Text('Transaction 1 - Waiting'),
-                  subtitle: Text('Details about transaction 1'),
-                ),
-                ListTile(
-                  title: Text('Transaction 2 - Waiting'),
-                  subtitle: Text('Details about transaction 2'),
-                ),
-              ],
-            ),
-            // Konten untuk tab "Completed"
-            ListView(
-              children: const [
-                ListTile(
-                  title: Text('Transaction 1 - Completed'),
-                  subtitle: Text('Details about transaction 1'),
-                ),
-                ListTile(
-                  title: Text('Transaction 2 - Completed'),
-                  subtitle: Text('Details about transaction 2'),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
+    return TransactionContent();
   }
 }

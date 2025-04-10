@@ -13,6 +13,7 @@ import '../data/repositories/user_repository.dart';
 import '../domain/repositories/book_repository_interface.dart';
 import '../domain/usecases/books/get_book_usecase.dart';
 import '../domain/usecases/get_user_usecase.dart';
+import '../domain/usecases/transactions/get_transaction_usecase.dart';
 import '../presentation/presenters/book_presenter.dart';
 import 'networks/api_client.dart';
 
@@ -64,6 +65,10 @@ void setupLocator() {
       () => PostTransactionUseCase(locator<TransactionRepository>()));
 
   //* Register transaction presenter
-  locator.registerLazySingleton<TransactionPresenter>(
-      () => TransactionPresenter(locator<PostTransactionUseCase>()));
+  locator.registerLazySingleton<TransactionPresenter>(() =>
+      TransactionPresenter(
+          locator<PostTransactionUseCase>(), locator<GetTransactionUseCase>()));
+
+  locator.registerLazySingleton<GetTransactionUseCase>(
+      () => GetTransactionUseCase(locator<TransactionRepository>()));
 }

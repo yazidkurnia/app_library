@@ -34,8 +34,13 @@ class BasePage extends StatelessWidget {
 
     return BottomNavigationBar(
       items: bottomNavItems!,
-      currentIndex: currentIndex ?? 0,
-      onTap: onNavItemTapped,
+      currentIndex: currentIndex!,
+      onTap: onNavItemTapped!,
+      selectedItemColor: Colors.blue, // Aktif
+      unselectedItemColor:
+          const Color.fromARGB(255, 179, 179, 179), // Tidak aktif
+      type: BottomNavigationBarType.fixed,
+      showUnselectedLabels: true,
     );
   }
 }

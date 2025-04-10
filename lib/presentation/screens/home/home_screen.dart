@@ -2,6 +2,7 @@ import 'package:app_library/presentation/screens/base_screen.dart';
 import 'package:app_library/presentation/screens/home/partial/content.dart';
 import 'package:flutter/material.dart';
 
+import '../../../data/data_sources/localstorage/shared_preferences_service.dart';
 import '../profile/profile_screen.dart';
 import '../transaction/transaction_screen.dart';
 
@@ -14,23 +15,51 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchBookController = TextEditingController();
-
+  SharedPreferencesService sharedPreferencesService =
+      SharedPreferencesService();
+  String? userRole;
   int _currentIndex = 0;
 
-  final List<BottomNavigationBarItem> _navItems = const [
-    BottomNavigationBarItem(
-      icon: Icon(Icons.home),
-      label: 'Home',
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.business),
-      label: 'Business',
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.person),
-      label: 'Profile',
-    ),
-  ];
+  List<BottomNavigationBarItem> get _navItems {
+    final items = <BottomNavigationBarItem>[
+      const BottomNavigationBarItem(
+        icon: Icon(Icons.home),
+        label: 'Home',
+      ),
+      const BottomNavigationBarItem(
+        icon: Icon(Icons.receipt_long),
+        label: 'Transaction',
+      ),
+      const BottomNavigationBarItem(
+        icon: Icon(Icons.person),
+        label: 'Profile',
+      ),
+    ];
+
+    if (userRole == '1') {
+      items.insert(
+          1,
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.qr_code_scanner),
+            label: 'Scanner',
+          ));
+    }
+
+    return items;
+  }
+
+  Future<void> _loadUserRole() async {
+    final role = await sharedPreferencesService.getUserRole();
+    setState(() {
+      userRole = role;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserRole();
+  }
 
   @override
   void dispose() {
@@ -46,11 +75,11 @@ class _HomeScreenState extends State<HomeScreen> {
         case 0:
           return const Center(child: Content());
         case 1:
-          return const Center(child: TransactionScreen());
-        case 2:
-          return const Center(child: ProfileScreen());
-        default:
           return const SizedBox.shrink();
+        case 2:
+          return const Center(child: TransactionScreen());
+        default:
+          return const Center(child: ProfileScreen());
       }
     }
 
