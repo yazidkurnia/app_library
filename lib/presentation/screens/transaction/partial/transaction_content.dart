@@ -26,6 +26,7 @@ class _TransactionContentState extends State<TransactionContent>
         Provider.of<TransactionPresenter>(context, listen: false);
 
     try {
+      transactionState.setLoading(true);
       List<TransactionEntity?> transaction =
           await transactionData.getTransactionState();
 
@@ -41,6 +42,8 @@ class _TransactionContentState extends State<TransactionContent>
     } catch (e) {
       // Handle error here, e.g., log it or show a message
       DebugLog().printLog('$e', 'error');
+    } finally {
+      transactionState.setLoading(false);
     }
   }
 
@@ -55,54 +58,72 @@ class _TransactionContentState extends State<TransactionContent>
   Widget build(BuildContext context) {
     Widget listTileDataWaiting() {
       return Consumer<TransactionState>(builder: (context, state, child) {
-        if (state.isLoading) {
-          return const SizedBox(
+        DebugLog().printLog(
+            'status loading data transaction: ${state.isLoading}', 'info');
+        if (state.isLoading == true) {
+          return SizedBox(
             width: double.infinity,
             child: Column(
               children: [
-                CustomShimmer(
-                    width: double.infinity, height: 100, child: SizedBox()),
-                CustomShimmer(
-                    width: double.infinity - 100,
-                    height: 40,
-                    child: SizedBox()),
+                const SizedBox(height: 12),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  child: CustomShimmer(
+                      width: double.infinity,
+                      height: 35,
+                      child: Container(
+                        color: Colors
+                            .white, // Ini adalah konten yang akan dishimmer
+                      )),
+                ),
+                const SizedBox(height: 12),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: CustomShimmer(
+                      width: double.infinity - 100,
+                      height: 35,
+                      child: Container(
+                        color: Colors
+                            .white, // Ini adalah konten yang akan dishimmer
+                      )),
+                ),
               ],
             ),
           );
+        } else {
+          if (state.errorMessage != null) {
+            return Center(child: Text(state.errorMessage.toString()));
+          }
+
+          if (state.transactionState.isEmpty) {
+            return const Center(child: Text('Maaf, data tidak ditemukan'));
+          }
+
+          // Filter untuk transaksi yang statusnya 'Waiting'
+          final waitingTransactions = state.transactionState
+              .where((data) => data.status == 'Waiting')
+              .toList();
+
+          return ListView.builder(
+            itemCount: waitingTransactions.length,
+            itemBuilder: (context, index) {
+              final dataState = waitingTransactions[index];
+              return ListTile(
+                title: Text(dataState.noTransaksi.toString()),
+                subtitle:
+                    Text(dataState.transactionDate ?? 'Tanggal tidak tersedia'),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => TransactionDetailScreen(
+                                transactionId: dataState.transaksiid,
+                              )));
+                },
+              );
+            },
+          );
         }
-
-        if (state.errorMessage != null) {
-          return Center(child: Text(state.errorMessage.toString()));
-        }
-
-        if (state.transactionState.isEmpty) {
-          return const Center(child: Text('Maaf, data tidak ditemukan'));
-        }
-
-        // Filter untuk transaksi yang statusnya 'Waiting'
-        final waitingTransactions = state.transactionState
-            .where((data) => data.status == 'Waiting')
-            .toList();
-
-        return ListView.builder(
-          itemCount: waitingTransactions.length,
-          itemBuilder: (context, index) {
-            final dataState = waitingTransactions[index];
-            return ListTile(
-              title: Text(dataState.noTransaksi.toString()),
-              subtitle:
-                  Text(dataState.transactionDate ?? 'Tanggal tidak tersedia'),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => TransactionDetailScreen(
-                              transactionId: dataState.transaksiid,
-                            )));
-              },
-            );
-          },
-        );
       });
     }
 

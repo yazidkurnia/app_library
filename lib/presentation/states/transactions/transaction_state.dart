@@ -1,9 +1,11 @@
+import 'package:app_library/core/constants/debug_log.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../../domain/entities/transaction_entity.dart';
+import '../../presenters/transaction_presenter.dart';
 
 class TransactionState with ChangeNotifier {
-  List<TransactionEntity>? _transactionState;
+  List<TransactionEntity>? _transactionState = [];
   TransactionEntity? _singleTransactionData;
   bool _isLoading = false;
   String? _errorMessage;
@@ -24,9 +26,16 @@ class TransactionState with ChangeNotifier {
   }
 
   void setAllTransaciton(List<TransactionEntity> transactionState) {
-    _transactionState = transactionState;
-    _errorMessage = null;
-    notifyListeners();
+    try {
+      _transactionState = transactionState;
+      DebugLog().printLog(
+          'transaction state [setAllTranction]: $_transactionState', 'info');
+      _errorMessage = null;
+      notifyListeners();
+    } catch (e) {
+      DebugLog().printLog(
+          'transaction state [setAllTranction]: $_transactionState', 'info');
+    }
   }
 
   void setSingleTransactionData(TransactionEntity singleTransactionData) {
@@ -38,5 +47,18 @@ class TransactionState with ChangeNotifier {
   void cleanError() {
     _errorMessage = null;
     notifyListeners();
+  }
+
+  Future<void> fetchTransactionDataById(
+      String? transactionId, TransactionPresenter transactionPresenter) async {
+    setLoading(true);
+    try {
+      TransactionEntity? data =
+          await transactionPresenter.getTransactionDetail(transactionId);
+
+      setSingleTransactionData(data!);
+    } catch (e) {
+      setError(e.toString());
+    }
   }
 }

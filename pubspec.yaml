@@ -43,6 +43,8 @@ dependencies:
   multiple_search_selection: ^2.7.1
   fluttertoast: ^8.2.5
   provider: ^6.1.4
+  flutter_barcode_scanner: ^2.0.0
+  getwidget: ^6.0.0
 
 dev_dependencies:
   flutter_test:

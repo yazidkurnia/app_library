@@ -14,7 +14,7 @@ class RdsTransaction {
   }
 
   Future<dynamic> getTransactionState() async {
-    DebugLog().printLog(ApiEndpoint.getStatusTransactionEndpoint, 'error');
+    DebugLog().printLog(ApiEndpoint.getStatusTransactionEndpoint, 'info');
     return await apiClient.get(ApiEndpoint.getStatusTransactionEndpoint);
   }
 

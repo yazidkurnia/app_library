@@ -18,32 +18,16 @@ class TransactionDetailScreen extends StatefulWidget {
 }
 
 class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
-  void fetchTransactionData(var transactionId) async {
-    final transactionState =
-        Provider.of<TransactionState>(context, listen: false);
+  Future<TransactionEntity?> fetchTransactionData() async {
     final transactionData =
         Provider.of<TransactionPresenter>(context, listen: false);
-
     try {
-      transactionState.setLoading(true);
-      TransactionEntity? transaction =
-          await transactionData.getTransactionDetail(transactionId);
-      if (transaction?.transaksiid != null) {
-        transactionState.setSingleTransactionData(transaction!);
-        transactionState.setLoading(false);
-      }
-      transactionState.setLoading(false);
+      return await transactionData.getTransactionDetail(widget.transactionId);
     } catch (e) {
       // Handle error here, e.g., log it or show a message
-      transactionState.setLoading(false);
       DebugLog().printLog('$e', 'error');
+      return null;
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    fetchTransactionData(widget.transactionId);
   }
 
   @override
@@ -55,7 +39,7 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
       );
     }
 
-    Widget statusTransaction(status) {
+    Widget statusTransaction(String status) {
       return SizedBox(
         width: MediaQuery.of(context).size.width / 4,
         child: CustomBadge(
@@ -64,62 +48,60 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
       );
     }
 
-    Widget detailTransaction() {
-      return Consumer<TransactionState>(
-        builder: (context, value, child) {
-          bool isLoading = value.isLoading;
-          var data = value.singleTransactionData;
-          if (isLoading == true) {
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Detail Transaksi'),
+        ),
+        body: FutureBuilder<TransactionEntity?>(
+          future: fetchTransactionData(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return ListView(
+                padding: const EdgeInsets.all(18),
+                children: const [
+                  SizedBox(
+                    width: double.infinity,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CustomShimmer(
+                            width: 100, height: 30, child: SizedBox()),
+                        CustomShimmer(
+                            width: 100, height: 30, child: SizedBox()),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data == null) {
+              return Center(child: Text('No data found'));
+            }
+
+            var data = snapshot.data!;
             return ListView(
               padding: const EdgeInsets.all(18),
-              children: const [
-                SizedBox(
-                  width: double.infinity,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CustomShimmer(width: 100, height: 30, child: SizedBox()),
-                      CustomShimmer(width: 100, height: 30, child: SizedBox()),
-                    ],
-                  ),
-                ),
+              children: [
+                statusTransaction(data.status!),
+                const SizedBox(height: 12),
+                titleAndData('No Transaksi', data.noTransaksi ?? '-',
+                    CrossAxisAlignment.start),
+                const SizedBox(height: 12),
+                titleAndData('Tanggal Transaksi', data.transactionDate ?? '-',
+                    CrossAxisAlignment.start),
+                const SizedBox(height: 12),
+                titleAndData('Total Peminjaman', data.loaningTotal!,
+                    CrossAxisAlignment.start),
+                const SizedBox(height: 12),
+                titleAndData('Nama Peminjaman', data.loanerName!,
+                    CrossAxisAlignment.start),
               ],
             );
-          }
-          return ListView(
-            padding: const EdgeInsets.all(18),
-            children: [
-              statusTransaction(data.status),
-              const SizedBox(height: 12),
-              titleAndData('No Transaksi', data.noTransaksi ?? '-',
-                  CrossAxisAlignment.start),
-              const SizedBox(
-                height: 12,
-              ),
-              titleAndData('Tanggal Transaksi', data.transactionDate ?? '-',
-                  CrossAxisAlignment.start),
-              const SizedBox(
-                height: 12,
-              ),
-              titleAndData('Total Peminjaman', data.loaningTotal!,
-                  CrossAxisAlignment.start),
-              const SizedBox(
-                height: 12,
-              ),
-              titleAndData('Nama Peminjaman', data.loanerName!,
-                  CrossAxisAlignment.start),
-            ],
-          );
-        },
-      );
-    }
-
-    return SafeArea(
-        child: Scaffold(
-      appBar: AppBar(
-        title: const Text('Detail Transaksi'),
+          },
+        ),
       ),
-      body: detailTransaction(),
-    ));
+    );
   }
 }
