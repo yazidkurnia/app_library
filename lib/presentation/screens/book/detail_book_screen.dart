@@ -2,7 +2,6 @@ import 'package:app_library/presentation/presenters/book_presenter.dart';
 import 'package:app_library/presentation/screens/book/additional_book_screen.dart';
 import 'package:app_library/presentation/screens/book/partial/content_detail_book.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/debug_log.dart';
@@ -90,35 +89,32 @@ class _DetailBookScreenState extends State<DetailBookScreen> {
     }
 
     Widget additionalBook() {
-      return Container(
-        child: Column(
-          children: [
-            Row(
-              children: [
-                OutlinedButton.icon(
-                  onPressed: () {
-                    additionalBookId.saveAdditionalBook(['${widget.bookId}']);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                const AdditionalBookScreen()));
-                  },
-                  icon: const Icon(Icons.add),
-                  label: const Text('Add more book'),
-                )
-              ],
-            ),
-            const SizedBox(height: 14),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(' judul buku tambahan'),
-                Text(' 1x'),
-              ],
-            )
-          ],
-        ),
+      return Column(
+        children: [
+          Row(
+            children: [
+              OutlinedButton.icon(
+                onPressed: () {
+                  additionalBookId.saveAdditionalBook([(widget.bookId)]);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AdditionalBookScreen()));
+                },
+                icon: const Icon(Icons.add),
+                label: const Text('Add more book'),
+              )
+            ],
+          ),
+          const SizedBox(height: 14),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(' judul buku tambahan'),
+              Text(' 1x'),
+            ],
+          )
+        ],
       );
     }
 

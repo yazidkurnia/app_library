@@ -48,11 +48,11 @@ class TransactionPresenter {
     try {
       return get.getTransactionDetail(transactionId);
     } catch (e) {
-      if (e is Failure) {
-        DebugLog()
-            .printLog('TransactionPresenter [getTransactionDetail]', 'error');
-        return null;
-      }
+      // if (e is Failure) {
+      DebugLog()
+          .printLog('TransactionPresenter [getTransactionDetail]', 'error');
+      return null;
+      // }
     }
   }
 }

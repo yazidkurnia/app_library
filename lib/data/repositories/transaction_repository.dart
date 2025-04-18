@@ -80,6 +80,7 @@ class TransactionRepository implements TransactionRepositoryInterface {
     }
   }
 
+  @override
   Future<TransactionEntity> getTransactionById(String transactionId) async {
     try {
       final response = await rdsTransaction.getTransactionDetail(transactionId);

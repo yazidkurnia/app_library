@@ -75,7 +75,6 @@ class _AdditionalBookScreenState extends State<AdditionalBookScreen> {
   Widget build(BuildContext context) {
     final allBookState = Provider.of<AllBookState>(context);
     books = allBookState.allBooksFromCategory; // Ambil daftar buku dari state
-    SharedPreferencesService additionalBookId = SharedPreferencesService();
 
     MultipleSearchController controller = MultipleSearchController();
 

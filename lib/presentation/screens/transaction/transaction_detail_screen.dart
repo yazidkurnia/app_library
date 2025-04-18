@@ -2,10 +2,11 @@ import 'package:app_library/domain/entities/transaction_entity.dart';
 import 'package:app_library/presentation/widgets/custom_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/constants/debug_log.dart';
+import '../../../data/data_sources/localstorage/shared_preferences_service.dart';
 import '../../presenters/transaction_presenter.dart';
-import '../../states/transactions/transaction_state.dart';
 import '../../widgets/custom_badge.dart';
 
 class TransactionDetailScreen extends StatefulWidget {
@@ -18,6 +19,9 @@ class TransactionDetailScreen extends StatefulWidget {
 }
 
 class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
+  SharedPreferencesService sharedPreferences = SharedPreferencesService();
+  late String userRole;
+
   Future<TransactionEntity?> fetchTransactionData() async {
     final transactionData =
         Provider.of<TransactionPresenter>(context, listen: false);
@@ -28,6 +32,18 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
       DebugLog().printLog('$e', 'error');
       return null;
     }
+  }
+
+  _iniUserRole() async {
+    userRole = (await sharedPreferences.getUserRole())!;
+    DebugLog().printLog(userRole, 'debug');
+  }
+
+  void initState() {
+    super.initState();
+
+    // init user role
+    _iniUserRole();
   }
 
   @override
@@ -46,6 +62,42 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
           badgeTitle: status,
         ),
       );
+    }
+
+    Widget buttonAction() {
+      if (userRole == '1') {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ElevatedButton(
+                style:
+                    ElevatedButton.styleFrom(backgroundColor: Colors.blue[50]),
+                onPressed: () {},
+                child: SizedBox(
+                    width: MediaQuery.of(context).size.width / 3 - 50,
+                    child: Center(
+                        child: Text('Cancel',
+                            style: TextStyle(color: Colors.blue[200]))))),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                onPressed: () {},
+                child: SizedBox(
+                    width: MediaQuery.of(context).size.width / 3 - 50,
+                    child: const Center(
+                        child: Text(
+                      'Reject',
+                    )))),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                onPressed: () {},
+                child: SizedBox(
+                    width: MediaQuery.of(context).size.width / 3 - 50,
+                    child: const Center(child: Text('Approved')))),
+          ],
+        );
+      } else {
+        return const SizedBox();
+      }
     }
 
     return SafeArea(
@@ -77,7 +129,7 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else if (!snapshot.hasData || snapshot.data == null) {
-              return Center(child: Text('No data found'));
+              return const Center(child: Text('No data found'));
             }
 
             var data = snapshot.data!;
@@ -97,6 +149,8 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
                 const SizedBox(height: 12),
                 titleAndData('Nama Peminjaman', data.loanerName!,
                     CrossAxisAlignment.start),
+                const Spacer(),
+                buttonAction()
               ],
             );
           },
